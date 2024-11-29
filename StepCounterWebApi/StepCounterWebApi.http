@@ -1,0 +1,6 @@
+@StepCounterWebApi_HostAddress = http://localhost:5111
+
+GET {{StepCounterWebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
