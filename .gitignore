@@ -6,3 +6,4 @@
 /.vs/StepCounterWebApi/v17
 /StepCounterWebApi/obj
 /StepCounterWebApi/Properties/PublishProfiles
+StepCounterWebApi/Properties/PublishProfiles/StepCounterWebApi - Web Deploy.pubxml.user
