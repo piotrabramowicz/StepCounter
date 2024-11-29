@@ -1,0 +1,25 @@
+{
+  "dependencies": {},
+  "parameters": {
+    "StepCounterWebApi.resourceGroupLocation": {
+      "Name": "StepCounterWebApi.resourceGroupLocation",
+      "Type": null,
+      "Value": "westeurope"
+    },
+    "StepCounterWebApi.resourceName": {
+      "Name": "StepCounterWebApi.resourceName",
+      "Type": null,
+      "Value": "StepCounterWebApi"
+    },
+    "StepCounterWebApi.subscriptionId": {
+      "Name": "StepCounterWebApi.subscriptionId",
+      "Type": "subscription",
+      "Value": "8fd168de-13e4-4782-a635-806ba7d414c8"
+    },
+    "StepCounterWebApi.resourceGroupName": {
+      "Name": "StepCounterWebApi.resourceGroupName",
+      "Type": "resourceGroup",
+      "Value": "StepCounter"
+    }
+  }
+}

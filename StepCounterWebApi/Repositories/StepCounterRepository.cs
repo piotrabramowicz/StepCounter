@@ -8,61 +8,67 @@ namespace StepCounterWebApi.Services
         private readonly IList<TeamMember> TeamMembers = dataContext.TeamMembers;
         private readonly IList<Team> Teams = dataContext.Teams;
 
-        public Task CreateTeamWithMembers(string teamName, string[] memberNames)
+        public void CreateTeamWithMembers(string teamName, string[] memberNames)
         {
-            var teamId = Guid.NewGuid();
-            Teams.Add(new Team() { Id = teamId, Name = teamName });
+            var newTeam = AddNewTeam(teamName);
 
             foreach (var memberName in memberNames)
             {
-                AddNewMemberToTeam(teamId, memberName);
+                AddNewMember(newTeam.Id, memberName);
             }
-            return Task.CompletedTask;
         }
 
-        public Task AddNewMemberToTeam(Guid teamId, string memberName)
-        {
-            TeamMembers.Add(new TeamMember() { Id = Guid.NewGuid(), Name = memberName, TeamId = teamId });
-            return Task.CompletedTask;
-        }
-
-        public Task IncreaseCounter(Guid counterId)
+        public void IncreaseCounter(Guid memberId)
         {
             (from member in TeamMembers
-             where member.Id == counterId
+             where member.Id == memberId
              select member).First().NumberOfSteps++;
-
-            return Task.CompletedTask;
         }
 
-        public Task<int> GetTotalStepsForTeam(Guid teamId)
+        public Team GetTotalStepsForTeam(Guid teamId)
         {
-            var result = 0;
-            foreach (var member in TeamMembers)
-            {
-                if (member.TeamId == teamId)
-                {
-                    result += member.NumberOfSteps;
-                }
-            }
-            return Task.FromResult(result);
-        }
+            var result = (from team in Teams
+                          where team.Id == teamId
+                          select team).First();
 
-        public Task<List<Tuple<string, int>>> GetTotalStepsForAllTeams()
-        {
-            var result = new List<Tuple<string, int>>();
-            var query = from team in Teams
-                        select new { TeamName = team.Name, TeamTotalSteps = GetTotalStepsForTeam(team.Id) };
+            var members = (from member in TeamMembers
+                           where member.TeamId == teamId
+                           select member).ToList();
 
-            foreach (var item in query)  
+            foreach (var member in members)
             {
-                result.Add(new Tuple<string, int>(item.TeamName, item.TeamTotalSteps.Result));
+                result.SumOfSteps += member.NumberOfSteps;
             }
 
-            return Task.FromResult(result);
+            return result;
         }
 
-        public Task DeleteTeam(Guid teamId)
+        public IEnumerable<Team> GetTotalStepsForAllTeams()
+        {
+            var result = from team in Teams
+                         select new Team { Id = team.Id, Name = team.Name, SumOfSteps = GetTotalStepsForTeam(team.Id).SumOfSteps };
+
+            return result;
+        }
+
+        public IEnumerable<TeamMember> GetMembersForTeam(Guid teamId)
+        {
+            var result = (from member in TeamMembers
+                          where member.TeamId == teamId
+                          select member).ToList();
+
+            return result;
+        }
+
+        public Team AddNewTeam(string teamName)
+        {
+            var result = new Team() { Id = Guid.NewGuid(), Name = teamName };
+            Teams.Add(result);
+
+            return result;
+        }
+
+        public void DeleteTeam(Guid teamId)
         {
             var teamToRemove = (from team in Teams
                                 where team.Id == teamId
@@ -77,25 +83,19 @@ namespace StepCounterWebApi.Services
             {
                 TeamMembers.Remove(member);
             }
-
-            return Task.CompletedTask;
         }
 
-        public async Task<List<TeamMember>> GetMembersForTeam(Guid teamId)
+        public void AddNewMember(Guid teamId, string memberName)
         {
-            var result = (from member in TeamMembers
-                          where member.TeamId == teamId
-                          select member).ToList();
-            return await Task.FromResult(result);
+            TeamMembers.Add(new TeamMember() { Id = Guid.NewGuid(), Name = memberName, TeamId = teamId });
         }
 
-        public Task DeleteMember(Guid memberId)
+        public void DeleteMember(Guid memberId)
         {
             var teamMemberToDelete = (from member in TeamMembers
                                       where member.Id == memberId
                                       select member).First();
             TeamMembers.Remove(teamMemberToDelete);
-            return Task.CompletedTask;
-        }
+        }      
     }
 }

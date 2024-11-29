@@ -4,13 +4,14 @@ namespace StepCounterWebApi.Services
 {
     public interface IStepCounterRepository
     {
-        Task CreateTeamWithMembers(string teamName, string[] memberNames);
-        Task AddNewMemberToTeam(Guid teamid, string memberName);
-        Task IncreaseCounter(Guid memberId);  
-        Task<int> GetTotalStepsForTeam(Guid teamId);
-        Task<List<Tuple<string, int>>> GetTotalStepsForAllTeams();
-        Task<List<TeamMember>> GetMembersForTeam(Guid teamId);
-        Task DeleteMember(Guid memberId);
-        Task DeleteTeam(Guid teamId);
+        void CreateTeamWithMembers(string teamName, string[] memberNames);
+        void IncreaseCounter(Guid memberId);  
+        Team GetTotalStepsForTeam(Guid teamId);
+        IEnumerable<Team> GetTotalStepsForAllTeams();
+        IEnumerable<TeamMember> GetMembersForTeam(Guid teamId);
+        Team AddNewTeam(string teamName);
+        void DeleteTeam(Guid teamId);
+        void AddNewMember(Guid teamid, string memberName);
+        void DeleteMember(Guid memberId);
     }
 }
