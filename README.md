@@ -20,7 +20,7 @@ https://stepcounterwebapi.azurewebsites.net/swagger/index.html
 
 ### CreateNewTeamWithMembers
 
-Creates new team with members
+Create new team with members
 
 ### IncrementCounter
 
