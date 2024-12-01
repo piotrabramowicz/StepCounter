@@ -35,6 +35,7 @@ namespace StepCounterWebApi.Services
                            where member.TeamId == teamId
                            select member).ToList();
 
+            result.SumOfSteps = 0;
             foreach (var member in members)
             {
                 result.SumOfSteps += member.NumberOfSteps;
